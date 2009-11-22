@@ -1,0 +1,10 @@
+
+För att skriva ut litet snyggare (dvs så att hela träd får plats) 
+kan man nu göra
+
+        epsffit -c 10 10 586 832 infil.eps utfil.eps
+
+eller för något större träd som man vill rotera 90° på pappret
+
+        epsffit -r 20 20 832 586 infil.eps utfil.eps
+

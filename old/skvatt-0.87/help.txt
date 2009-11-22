@@ -1,0 +1,78 @@
+These are the predicates you can use:
+
+?- help.
+     [show this text]
+
+?- features +Feature, +Feature, ....
+     [set the features to be used in FS]
+?- fs(?FS).
+     [FS is a feature structure]
+?- feature(?Feature).
+     [Feature is a declared feature]
+?- feature(?Feature,?FS,?Value).
+     [Feature has value Value in thte feature structure FS]
+
+?- ...  FS ? Feature  ...
+     [replaced with the value of the Feature in the FS]
+?- ...  ! [Feat=Val,...]  ...
+     [replaced with a FS with (some of) the features specified]
+?- ...  X ! [Feat=Val,...]  ...
+     [as ![...] but X is also instantiated to the FS
+      (X is an alias for the FS)]
+?- ...  X @ Term  ...
+     [as X![...] but Term can be any term 
+      (X is an alias for Term)]
+?- bb_put(fs:expand,on/off)
+     [turn on/off the expansions described here]
+
+Term ---> Term, ..., {PrologGoal}, ..., [Word,...], ....
+     [define a grammar rule]
+?- grammar.
+     [print the current grammar]
+
+?- parse(?Term,+Words).
+     [parse a list of Words as the term Term (which can be 
+      uninstantiated). all possible parse trees are written to 
+      the screen and temporary thistle files]
+?- parse(?Term,+WordList,-Tree).
+     [parse a list of Words complying to a Term, giving a parse Tree]
+?- parse(?Term,+WordList,-Terms,-ChartSize).
+     [parse a String complying to a Term, giving a all possible
+      results, and the total number of edges in the chart.]
+
+?- generate(+N,?Term).
+     [generate N grammatical phrases for the term Term.
+      the output is written as strings and
+      parse trees to the screen and Thistle SGML files]
+?- generate(?Term,-Words,-Tree).
+     [generate one random grammatical list of Words, with
+      its parse Tree, that complies with a Term]
+
+?- print(+Object).
+     [pretty-print the Object]
+?- bb_put(fs:portray,on/off)
+     [turn pretty-printing of FS on/off]
+?- bb_put(parser:portray,on/off)
+     [turn pretty-printing of parse trees on/off]
+
+?- start_thistle.
+     [start the Thistle interpreter]
+?- thistle(+Object).
+     [print an object (e.g. FS or parse tree) in thistle format]
+?- thistle(+FileName,+Object).
+     [print an object in thistle format to a file]
+
+?- hide +Feature.
+     [hide a feature when pretty-printing FS]
+?- show +Feature.
+     [show a feature (default)]
+?- hidden( ?Feature ).
+     [Feature is a hidden feature]
+?- depth +Depth.
+     [set the max search depth for generation,
+      used by generate/2,3]
+?- parsetrees on/off.
+     [show the full parsetrees or just the term,
+      used by parse/2 and generate/2]
+
+

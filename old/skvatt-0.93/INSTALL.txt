@@ -1,0 +1,23 @@
+
+Installation
+----------------------------------------
+
+Skapa ett bibliotek skvatt någonstans på din dator
+(låt oss säga /users/jag/mina_program/skvatt),
+och lägg alla skvatt-filer där.
+Lägg till följande rader i filen .sicstusrc: 
+
+  :- multifile library_directory/1, file_search_path/2.
+  library_directory('/users/jag/mina_program/skvatt').
+  file_search_path(skvatt, '/users/jag/mina_program/skvatt').
+            
+
+SKVATT tillsammans med Thistle
+----------------------------------------
+
+För att kunna använda Thistle för att titta på parsträden, 
+måste du även göra följande. (Det är möjligt att detta inte stämmer riktigt). 
+
+Installera Thistle, som finns att hämta på ftp://ftp.cogsci.ed.ac.uk/pub/thistle 
+Se till att Thistle är globalt körbart under namnet 'thistle'.
+
