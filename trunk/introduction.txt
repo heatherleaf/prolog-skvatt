@@ -1,0 +1,189 @@
+
+============================================================
+An introduction to SKVATT
+(by Peter Ljunglöf, written 2004, translated to English 2009)
+
+------------------------------------------------------------
+1. What is SKVATT?
+
+SKVATT is an extension of Prolog which makes it possible to reason
+about feature structures as any other Prolog term.
+
+SKVATT extends Prolog with two new operators for handling
+feature structures, "!" and "?".
+
+SKVATT is very similar to Michael Covington's GULP: 
+http://www.ai.uga.edu/mc/gulp/
+
+------------------------------------------------------------
+2. Declare your features
+
+Before starting to working with feature structures you have to declare
+which features there are. The name of a feature must be a Prolog atom:
+
+?- features cat, dog, wolf.
+
+If you forget this, you will get a lot of error messages later.
+
+------------------------------------------------------------
+3. Creating feature structures
+
+You use "!" to create a feature structure. The operator must be
+followed by a list of feature-value assignments. The order between the
+assignments is *not* important:
+
+?- FS = ![dog=something(important), cat=13].
+FS = ![cat=13, dog=something(important), wolf=_]
+
+?- ![cat=Cat, dog=42] = ![dog=Dog, cat=anders].
+Cat = anders, Dog = 42 
+
+To get an empty feature structure, you write "![]":
+
+?- FS = ![].
+FS = ![cat=_, dog=_, wolf=_]  
+
+------------------------------------------------------------
+4. Getting the value of a feature
+
+You use "?" to pick the value of a feature from a given feature structure:
+
+?- Cat = ![dog=42, cat=13] ? cat.
+Cat = 13
+
+?- FS?cat = FS?dog, FS?dog?wolf = 42.
+FS = ![cat={1}![cat=_, dog=_, wolf=42], dog={1}, wolf=_]
+
+The "{1}" in the result means that the two features are sharing the
+same value, since we unified them.
+
+In the term "FS?dog?wolf" the sequence "?dog?wolf" is
+called a *path*. In a path alla features must be known from the
+beginning. In other words, you are not allowed to use a variable like
+in "FS?dog?X".
+
+------------------------------------------------------------
+5. Creating "aliases" for feature structures
+
+Instead of writing "FS = ![...], FS = Hopp?wolf", you can combine them
+into the single goal "FS![...] = Hopp?wolf". When you write "FS![...]"
+it is the same as writing "![...]", but the variable FS is unified
+with the feature structure itself. The FS variable will be an "alias"
+for the structure, which is especially useful when writing grammars.
+
+------------------------------------------------------------
+6. Showing feature structures
+
+When Prolog answers with a feature structure, it prints the value of
+all feautres, even if they are uninstantiated. With the predicate
+print/1 you can print a prettier version:
+
+?- print(![wolf=43, cat=pelle]).
+![cat=pelle, wolf=43]
+
+?- FS?cat = FS?dog, FS?dog?wolf = 42, print(FS).
+![cat={1}![wolf=42], dog={1}]
+
+Note that you can use print/1 for printing any prolog terms:
+
+?- FS?dog = 13, print([42, FS, FS?dog]).
+[42, ![dog=13], 13]
+
+------------------------------------------------------------
+7. Hiding and showing features
+
+It is possible to hide feature, so that they are not shown when
+printing:
+
+?- hide wolf.
+?- hide cat.
+
+?- FS = ![cat=1,dog=2,wolf=3].
+FS = ![dog=2]
+
+?- show cat.
+
+?- FS = ![cat=1,dog=2,wolf=3].
+FS = ![cat=1, dog=2]
+
+------------------------------------------------------------
+8. Testing your feature structures
+
+It is possible to test if something is a feature structure.
+This predicate can also be used for creating new feature structures. 
+
+?- fs(![cat=np]).
+yes
+
+?- fs([cat=np]).
+no
+
+?- fs(FS).
+FS = ![cat=_, dog=_, wolf=_]  
+
+It is also possible to test if something is a feature, and to
+enumerate all features:
+
+?- feature(dog).
+yes
+
+?- feature(hund).
+no
+
+?- feature(X).
+X = cat  ;
+X = dog  ;
+X = wolf  ;
+no
+
+Finally it is possible to test the value of a feature, 
+for a given structure, or to set an arbitrary feature:
+
+?- feature(wolf, ![cat=12, wolf=43], Value).
+Value = 43
+
+?- feature(dog, FS, 18).
+FS = ![cat=_, dog=18, wolf=_]  
+
+?- feature(X, FS, 2). 
+X = cat,  FS = ![cat=2, dog=_, wolf=_]  ;
+X = dog,  FS = ![cat=_, dog=2, wolf=_]  ;
+X = wolf, FS = ![cat=_, dog=_, wolf=2]  ;
+no
+
+============================================================
+Appendix: How is a feature structure represented?
+
+A feature structure is represented in Prolog as an ordinary complex
+term '$FS'(....), where the arguments contain the values of the
+features, in alphabetical order. There is also an extra final argument
+which is a reference that is used for determining if two structures
+are shared or not.
+
+If you write "![...]" or "FS?..." or something similar, it is
+translated to a corrensponding Prolog term already at compile time,
+before any predicate calls. This is the reason why variables are not
+allowed in the path. It is also the reason why you can get
+errors already at compile time. 
+
+It is always best to start your program with:
+
+:- use_module(library(skvatt)).
+:- features a, b, c, ....
+
+The very last argument in an '$FS' term - the reference - implies that
+there is a difference between two structures being equal, and that all
+their features are equal:
+
+?- FS1 = ![cat=1, dog=2, wolf=3], 
+   FS2 = ![cat=1, dog=2, wolf=3], 
+   print(FS1 - FS2).
+
+![cat=1, dog=2, wolf=3] - ![cat=1, dog=2, wolf=3]
+
+?- FS1 = ![cat=1, dog=2, wolf=3], 
+   FS2 = FS1, 
+   print(FS1 - FS2).
+
+{1}![cat=1, dog=2, wolf=3] - {1}
+

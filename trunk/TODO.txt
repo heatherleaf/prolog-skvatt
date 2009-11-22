@@ -1,0 +1,69 @@
+
+Things to add to SKVATT
+--------------------------------
+
+* most important
+
+add SWI prolog!
+
+
+* feature structures
+
+add named feature structures:
+
+  :- op(1100, xfx, features).
+
+  :- np features num, gen, kas.    ==>  np![num=X,gen=Y,kas=Z] = np(X,Y,Z)
+
+  :- vp features temp, args.       ==>  vp![temp=X,args=Y] = vp(X,Y)
+
+  :- cons features head, tail.     ==>  cons![head=X,tail=Y] = cons(X,Y)
+
+  :- nil features {}.              ==>  nil![] = nil
+
+keep the current non-name ones:
+
+  :- features a, b, c.             ==>  ![a=X,b=Y,c=Z] = '$FS'(X,Y,Z)
+
+  FS?c                             ==>  Z  /  FS = ![c=Z]
+
+  NP?num ... NP?kas                ==>  X .. Z  /  NP = ![num=X], NP = ![kas=Z]
+
+  :- fs1 features a, b.
+  :- fs2 features a, c.
+
+  FS?a                             ==>  Z  /  (FS = fs1![a=Z] ; FS = fs2![a=Z])
+                                   ==>  error: ambiguous!
+
+  FS?a .. FS?b                     ==>  Z  /  (FS = fs1![a=Z] ; FS = fs2![a=Z]), FS = fs1![b=Z]  
+                                   ==>  ok
+
+  FS @ fs1![] ? a
+  FS @ fs2![] ? b
+
+
+* grammar
+
+add Kleene star to the grammar formalism?
+
+
+* parser
+
+link tables, so that filtering works correctly
+
+GLR-parser
+
+
+* error messages
+
+better error messages -- it should print line numbers etc.
+
+it should warn for cyclic terms
+
+
+* printing
+
+add printing to latex/pstrics/pstree
+
+
+

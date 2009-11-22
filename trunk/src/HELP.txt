@@ -1,0 +1,129 @@
+
+**********************************************************************
+    SKVATT version 1.0, by Peter Ljunglöf, aug 1999 -- jan 2003
+**********************************************************************
+
+
+**********************************************************************
+    Skvatt                                                (skvatt)    
+**********************************************************************
+
+    : This is the Skvatt grammar system containing the modules:
+    : fs, grammar, parser, generator, thistle, flags and skvatt_help
+
+
+**********************************************************************
+    Feature structures                                        (fs)    
+**********************************************************************
+
+    : This module defines feture structures (FS)
+
+?- features +Feature, +Feature, ...
+    : set the features to be used in a FS
+?- fs(?FS).
+    : FS is a feature structure
+?- feature(?Feature).
+    : Feature is a declared feature
+?- feature(?Feature, ?FS, ?Value).
+    : Feature has value Value in the feature structure FS
+?- ... FS ? Feature ...
+    : the functor is expanded to the value of the Feature in the given FS
+?- ... ! [Feat=Val,...] ...
+    : the functor is expanded to a FS with the features specified
+?- ... X ! [Feat=Val,...] ...
+    : as the functor ![...] but X is also instantiated to the result
+    : (X is an alias for the FS)
+?- ... X @ Term ...
+    : as X![...] but Term can be any term
+    : (X is an alias for Term)
+?- print(+Term).
+    : pretty-print a term
+?- hide +Feature.
+    : hide a feature when pretty-printing FS
+?- show +Feature.
+    : show a feature (default)
+?- hidden(?Feature).
+    : Feature is a hidden feature
+
+**********************************************************************
+    Grammar productions                                  (grammar)    
+**********************************************************************
+
+    : This module defines the grammar format
+
+LHS ---> RHS.
+    : definition of a grammar production;
+    : LHS is a grammar term; RHS is a limited goal
+    : (either a grammar term, a terminal (i.e. a list),
+    : a conjunction or a disjunction);
+    : RHS can optionally contain where/2 and when/2;
+    : (RHS where Constraints) and (RHS when Goal)
+?- grammar.
+    : pretty-printing the grammar
+
+**********************************************************************
+    Parsing                                               (parser)    
+**********************************************************************
+
+    : This module defines a chartparser working on
+    : the grammar format in the grammar module
+
+?- parse(?Term, +Words).
+    : parse a list of Words as the term Term (which can be
+    : uninstantiated). all possible parse trees are written to
+    : the screen and temporary thistle files
+?- parse_one(?Term, +Words).
+    : parse a list of Words complying to a Term
+?- parse(?Term, +Words, -Tree).
+    : parse a list of Words complying to a Term, giving a parse Tree
+?- parse_all(?Term, +Words, -Terms).
+    : parse a String complying to a Term, giving a all possible results
+?- final_term(?Term).
+    : giving a final parse term, after parsing is done
+?- extract_tree(?Term, ?Tree).
+    : extracting a parse Tree from a Term, after parsing is done
+?- print_tree(+Tree).
+    : pretty-printing a parse Tree
+?- print_statistics.
+    : statistics about the latest parse
+
+**********************************************************************
+    Thistle, graphically displaying parse trees          (thistle)    
+**********************************************************************
+
+    : This module defines an interface to the Thisle graphics package
+
+?- start_thistle.
+    : start the Thistle interpreter
+?- thistle(+Term).
+    : print a term (e.g. FS or parse tree) in thistle format
+?- thistle(+FileName, +Term).
+    : print a term in thistle format to a file
+
+**********************************************************************
+    Handling of flags                                      (flags)    
+**********************************************************************
+
+    : This module defines predicates on flags used by the other modules
+
+?- flags.
+    : show all the current flags
+?- flag_value(+Flag, ?Value).
+    : gets the current value of Flag
+?- set_flag(+Flag, +Value).
+    : sets a new value for Flag
+
+**********************************************************************
+    Skvatt help texts                                (skvatt_help)    
+**********************************************************************
+
+    : This module defines help predicates
+
+?- help.
+    : shows all help texts
+?- skvatt_help.
+    : shows all help texts
+?- skvatt_help(+Section/Predicate).
+    : gives help for the given section, or the given predicate
+?- skvatt_help(+Section, +Predicate).
+    : gives help for the given predicate in the given section

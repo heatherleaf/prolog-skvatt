@@ -1,0 +1,115 @@
+
+                                                Peter Bohlin, 990806
+
+
+Installationsanvisning
+----------------------
+
+Filerna platt.pl och platt.spec bör installeras bland sicstus prologs
+standardbibliotek. Thistle installeras på nåt bra ställe, likaså med 
+Java (som Thistle behöver).
+
+På raderna 73-74 (typ) definieras två predikat thistle_path/1 och 
+platt_path/1. Där måste skrivas sökvägarna till thistle-programmet
+och till filen platt.spec.
+
+Sen ska allt vara klart att köra.
+
+
+
+Liten användarmanual till PLATT
+-------------------------------
+
+En grammatikfil är en helt (o)vanlig prologfil, ändelse .pl (tills vidare)
+Först i grammatikfilen måste stå:
+  :- use_module(library(platt)).
+
+Sedan måste alla värden och labels definieras:
+  label(L1). label(L2). ...
+  value(V1). value(V2). ...
+
+Grammatikregler är på formen:
+  Var1 ---> Var2, Var3, ...., { Plattmål }.
+  Var --- "ord1", "ord2", ...., { Plattmål }.
+  'mall'(Arg1,Arg2,...) := Plattmål.
+Den första formen är för vanliga regler: VarN måste vara prologvariabler.
+Den andra formen är för lexikoningångar: "ordN" måste vara prologsträngar.
+Den tredje formen är för mallar: 'mall' är namnet på mallen och ArgN är
+prologvariabler.
+
+Plattmål är en mängd mål till predikatet prove/1 (se nedan), målen är
+separerade med komman. Ett Plattmål kan se ut på följande sätt:
+  true               lyckas alltid
+  print(X)           skriver ut X
+  nl                 skriver ut en ny rad
+  pprint(X)          snygg utskrift av X
+  Path1=Path2        unifierar två särdragstrukturer
+  'mall'(Path1,...)  utför plattmålet som definieras av mallen
+Stigarna (PathN) är uppbyggda på följande sätt:
+  Var:label:...:label
+  'value'
+  en prologlista av 'value'
+där 'label' resp 'value' är definierade enligt ovan. 
+
+För att läsa in grammatiken konsulterar man helt enkelt grammatikfilen.
+
+
+* Starta Thistle-tolkaren
+
+Predikatet start_thistle/0 startar Thistle. Detta är bara nödvändigt
+om man vill titta på parsträdsfilerna som genereras. Dvs. Thistle är
+inte alls nödvändigt för att kunna köra PLATT.
+
+* Kontroll av grammatiken
+
+Predikatet check kontrollerar att man har skrivit sin grammatik
+syntaktiskt korrekt.
+
+
+* Parsning av strängar
+
+parse(?Cat,+String) parsar prologsträngen String enligt kategorin
+Cat (dvs särdaget cat måste vara Cat). Detta predikat ger alla möjliga
+lösningar som skrivs ut till skärmen och till filerna platt-N.sgml,
+för visning i Thistle.
+
+parse(?Term,+String,-Tree) parsar String enligt särdragsstrukturen
+Term och ger parsträdet Tree (samt instansierar Term). Detta ger endast
+en lösning åt gången (men man kan ju backtracka). Används med fördel
+tillsammans med prove/1 (för att för korrekt Term) och med pprint/1
+(för att skriva ut Tree på ett lättsammare sätt) eller med thistle/2
+(för att skriva trädet till en thistle-fil).
+
+
+* Generering av strängar
+
+generate(+N,?Cat) genererar N stycken slumpmässiga grammatiska satser
+med kategorin Cat. Satserna skrivs ut på skärmen och på filerna
+platt-N.sgml för visning i Thistle.
+
+generate(?Term,-String,-Tree) genererar en slumpmässig sats enligt
+strukturen Term och ger parsträdet Tree. Används med fördel tillsammans
+med prove/1 och pprint/1 eller thistle/2.
+
+
+* Felsökning
+
+tracer(?Trace) slår på eller av felsökningen. Trace kan instantieras
+till on resp. off.
+
+
+* Bevisning av PLATT-mål och instantiering av särdragsstrukturer
+
+prove(?Plattmål) instantierar särdragsstrukturer med hjälp av (ett
+eller flera) plattmål. Obs, om man ska bevisa flera mål måste de vara
+omslutna av extra parenteser, t.ex. prove((A:x=B:y)).
+
+
+* Snygga utskrifter till terminal och Thistle
+
+pprint(+Term) skriver ut särdragsstrukturen Term på terminalen.
+
+thistle(+File,+Term) skriver ut Term på filen File för visning i Thistle.
+
+
+

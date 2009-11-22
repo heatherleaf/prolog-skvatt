@@ -1,0 +1,23 @@
+
+SKVATT, Installation
+----------------------------------------
+
+Add the following lines to the file .sicstusrc (creating the file if necessary):
+
+	:- multifile library_directory/1, file_search_path/2.
+	library_directory('/users/me/my_programs/skvatt/src').
+	file_search_path(skvatt, '/users/me/my_programs/skvatt/src').
+
+(assuming that the Skvatt Prolog files are located in the specified directory).            
+
+
+Using SKVATT together with Thistle
+----------------------------------------
+
+It is possible to use Thistle to look at the parsetrees.
+(Or at least it was possible back in 2004):
+
+Install Thistle from ftp://ftp.cogsci.ed.ac.uk/pub/thistle 
+Make sure it is possible to run from the command line under 
+the name 'thistle'.
+
